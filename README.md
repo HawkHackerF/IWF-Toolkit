@@ -38,7 +38,7 @@ run.bat                             # Windows launcher (drag a file onto it)
 ## Workflow
 
 1. **Drag an image** onto the window, or use `Ctrl+O`. Any file the analysis
-   layer understands can be opened (see *Supported formats* below).
+   layer understands can be opened (see _Supported formats_ below).
 2. The **Overview** page summarises the file: format, geometry, hashes, entropy
    and a one-line verdict.
 3. The **Bit Planes** page shows a montage of every bit plane (for an 8-bit RGB
@@ -82,14 +82,14 @@ image assets are shipped.
 `Edit > Preferences...` (`Ctrl+,`) edits the persisted settings and applies them
 immediately:
 
-| Section | Options |
-|---|---|
-| General | default sweep depth, pixel-search offsets, bit widths, byte budget, extraction confirmation |
-| Extraction | default output folder, maximum payload size |
-| Strings | minimum length, encoding, maximum listed |
-| Display | interface density (comfortable/compact), montage tile count |
-| Hex | rows per page |
-| OCR | enable visible-text reading, Tesseract language, engine path, test button |
+| Section    | Options                                                                                     |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| General    | default sweep depth, pixel-search offsets, bit widths, byte budget, extraction confirmation |
+| Extraction | default output folder, maximum payload size                                                 |
+| Strings    | minimum length, encoding, maximum listed                                                    |
+| Display    | interface density (comfortable/compact), montage tile count                                 |
+| Hex        | rows per page                                                                               |
+| OCR        | enable visible-text reading, Tesseract language, engine path, test button                   |
 
 Settings live in `%APPDATA%\ImageForensicsWorkbench\settings.json` (or
 `~/.config/image-forensics-workbench/settings.json`). Interface density applies
@@ -98,20 +98,25 @@ on the next start.
 ## Pages
 
 ### Overview
+
 File facts, hashes (MD5/SHA-1/SHA-256), Shannon entropy, and a summary verdict
 that combines the metadata, structure and steganalysis findings.
 
 ### Bit Planes
+
 Every plane in one zoomable montage. Supported views include plain isolation,
 inversion, edges, keep and clear. Export the montage as PNG, or export every
 plane to a folder as separate PNG files.
 
 ### Visual Analysis
+
 Single-plane view with per-channel, per-bit selection, inversion, and derived
 carriers (channel XOR, channel difference, per-pixel max/min/average).
 
 ### Metadata
+
 Full metadata extraction:
+
 - EXIF (TIFF IFDs, including GPS and interoperability tags),
 - XMP, ICC profiles, IPTC and Photoshop records where present,
 - PNG textual chunks (`tEXt`, `zTXt`, `iTXt`), JFIF, GIF and BMP headers,
@@ -119,6 +124,7 @@ Full metadata extraction:
   embedded-thumbnail extraction.
 
 ### Structure
+
 Container-level analysis: chunk/tile walk of PNG, JPEG, GIF, BMP, TIFF and
 WEBP, trailing-data detection with entropy, embedded-file signatures, carved
 data, string and pattern search. The signature scan runs against a full
@@ -127,7 +133,9 @@ and disk images); two-byte magics such as `BM` and `MZ` are only reported when
 a cheap validity check passes, so random data does not flood the report.
 
 ### Strings
+
 The `strings` equivalent, working on the raw file bytes:
+
 - configurable minimum length and encoding (ASCII, UTF-16LE or both),
 - substring filter, a quick "only `flag`" toggle, and export to a text file,
 - **Find in pixels**: type any text and the page searches every carrier, bit,
@@ -135,15 +143,19 @@ The `strings` equivalent, working on the raw file bytes:
   decode configuration that reproduces the text; double-click one to extract it.
 
 ### Hex
+
 An editable hex editor over the whole file:
+
 - offset navigation, byte paging, find (text or hex bytes) and find next,
 - edit bytes directly in the hex column, then apply changes with find/replace,
   insert bytes at an offset, or delete a byte range,
 - revert to the file on disk, then save or save as to write the patched bytes.
 
 ### Steganalysis
+
 First-order statistical triage, clearly labelled as an estimate rather than
 proof:
+
 - chi-square attack on pairs of values,
 - RS analysis and sample-pair analysis (SPA),
 - LSB density map, bit-plane entropy,
@@ -154,17 +166,18 @@ proof:
   coefficient LSB histogram, and JSteg extraction.
 
 ### Payloads
+
 The sweep. It tries, in the background and with a stop button:
 
-| Axis | Coverage |
-|---|---|
-| Single channels | R, G, B, A, Gray, palette index plane |
-| Derived carriers | channel XOR, channel difference, max/min/average |
-| Interleaved | the six permutations of R, G, B (zsteg `b1,rgb` style) |
-| Bit width | 1 bit, 2 bits and 4 bits per sample |
-| Starting bit | every bit position valid for the width |
-| Byte grouping | most-significant-first and least-significant-first |
-| Bit offset | configurable (data that is not byte-aligned is still found) |
+| Axis             | Coverage                                                    |
+| ---------------- | ----------------------------------------------------------- |
+| Single channels  | R, G, B, A, Gray, palette index plane                       |
+| Derived carriers | channel XOR, channel difference, max/min/average            |
+| Interleaved      | the six permutations of R, G, B (zsteg `b1,rgb` style)      |
+| Bit width        | 1 bit, 2 bits and 4 bits per sample                         |
+| Starting bit     | every bit position valid for the width                      |
+| Byte grouping    | most-significant-first and least-significant-first          |
+| Bit offset       | configurable (data that is not byte-aligned is still found) |
 
 Results are ranked by a text-likeness score; real flag matches are listed
 separately. Any candidate can be replayed exactly, carved, or exported.
@@ -188,26 +201,29 @@ recover the data:
   and **Save bytes...** (raw) buttons.
 
 ### Extract
+
 Manual bitstream extraction: choose carrier, starting bit, bit width, byte
 order, bit offset and a byte limit. Shows ASCII, hex and a list of printable
 strings, and can save the raw `.bin` or `.txt`.
 
 ### Embed
+
 Least-significant-bit substitution into a chosen carrier, bit and offset, with a
 capacity check, for building test material and verifying round-trips. Saves PNG
 so the modification is lossless.
 
 ### Report
+
 Build a consolidated report as HTML, JSON or plain text, and save individual
 sections.
 
 ## Scan depths
 
-| Mode | Coverage | Notes |
-|---|---|---|
-| Quick | 1- and 2-bit widths, 4 offsets, 50 KB per stream | fast triage |
-| Standard (default) | 1-, 2- and 4-bit widths, 8 offsets, 200 KB per stream | balanced |
-| Deep | 1-, 2- and 4-bit widths, 8 offsets, 1 MB per stream | most thorough |
+| Mode               | Coverage                                              | Notes         |
+| ------------------ | ----------------------------------------------------- | ------------- |
+| Quick              | 1- and 2-bit widths, 4 offsets, 50 KB per stream      | fast triage   |
+| Standard (default) | 1-, 2- and 4-bit widths, 8 offsets, 200 KB per stream | balanced      |
+| Deep               | 1-, 2- and 4-bit widths, 8 offsets, 1 MB per stream   | most thorough |
 
 All analysis runs on worker threads. The UI stays responsive and any long job
 can be stopped; results from a previous image are discarded if the image changes
@@ -274,43 +290,43 @@ Individual modules can be tested on their own, for example
 python make_demo.py
 ```
 
-| File | What it demonstrates |
-|---|---|
-| `demo_blue_lsb.png` | flag drawn as a picture in the blue LSB plane |
-| `demo_blue_lsb_bytes.png` | flag stored as bytes in the blue LSB plane |
-| `demo_interleaved_rgb.png` | flag interleaved across R, G, B at bit 1 |
-| `demo_width2_blue.png` | flag stored as two bits per blue sample |
-| `demo_metadata.jpg` | ordinary JPEG with EXIF metadata |
-| `demo_indexed.png` | palette image with a duplicate entry |
-| `demo_blue_lsb_extracted.png` | reference extraction of the visual carrier |
+| File                          | What it demonstrates                          |
+| ----------------------------- | --------------------------------------------- |
+| `demo_blue_lsb.png`           | flag drawn as a picture in the blue LSB plane |
+| `demo_blue_lsb_bytes.png`     | flag stored as bytes in the blue LSB plane    |
+| `demo_interleaved_rgb.png`    | flag interleaved across R, G, B at bit 1      |
+| `demo_width2_blue.png`        | flag stored as two bits per blue sample       |
+| `demo_metadata.jpg`           | ordinary JPEG with EXIF metadata              |
+| `demo_indexed.png`            | palette image with a duplicate entry          |
+| `demo_blue_lsb_extracted.png` | reference extraction of the visual carrier    |
 
 ## Project layout
 
-| Path | Contents |
-|---|---|
-| `ifw/__init__.py` | package metadata (name, version, organisation) |
-| `ifw/imaging.py` | document model, bit/byte access, montage, scoring |
-| `ifw/scan.py` | payload sweep worker, pixel text search and generic task worker |
-| `ifw/metadata.py` | EXIF/TIFF/XMP/ICC/IPTC/PNG-text parsing, hashes, entropy |
-| `ifw/structure.py` | container/chunk/trailing analysis, signature templates, entropy map, strings |
-| `ifw/steganalysis.py` | statistics, transforms, palette and JPEG DCT analysis |
-| `ifw/config.py` | persisted user settings (JSON), validation and derived helpers |
-| `ifw/ocr.py` | optional Tesseract adapter for reading visible text |
-| `ifw/gui/theme.py` | dark palette, stylesheet, icon tints and fonts |
-| `ifw/gui/icons.py` | vector icon set (SVG glyphs rendered and tinted per state) |
-| `ifw/gui/preferences.py` | sectioned preferences dialog |
-| `ifw/gui/widgets.py` | image view, hex viewer and editor, text dialog, tables |
-| `ifw/gui/pages.py` | the twelve workspace pages |
-| `ifw/gui/main.py` | main window, menus, toolbar, threading, report builders |
-| `ifw/gui/__init__.py` | application entry point (`run`) |
-| `ifw.py`, `ifw/__main__.py` | launchers |
-| `selftest.py` | end-to-end test suite |
-| `make_demo.py` | sample-image generator |
+| Path                        | Contents                                                                     |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `ifw/__init__.py`           | package metadata (name, version, organisation)                               |
+| `ifw/imaging.py`            | document model, bit/byte access, montage, scoring                            |
+| `ifw/scan.py`               | payload sweep worker, pixel text search and generic task worker              |
+| `ifw/metadata.py`           | EXIF/TIFF/XMP/ICC/IPTC/PNG-text parsing, hashes, entropy                     |
+| `ifw/structure.py`          | container/chunk/trailing analysis, signature templates, entropy map, strings |
+| `ifw/steganalysis.py`       | statistics, transforms, palette and JPEG DCT analysis                        |
+| `ifw/config.py`             | persisted user settings (JSON), validation and derived helpers               |
+| `ifw/ocr.py`                | optional Tesseract adapter for reading visible text                          |
+| `ifw/gui/theme.py`          | dark palette, stylesheet, icon tints and fonts                               |
+| `ifw/gui/icons.py`          | vector icon set (SVG glyphs rendered and tinted per state)                   |
+| `ifw/gui/preferences.py`    | sectioned preferences dialog                                                 |
+| `ifw/gui/widgets.py`        | image view, hex viewer and editor, text dialog, tables                       |
+| `ifw/gui/pages.py`          | the twelve workspace pages                                                   |
+| `ifw/gui/main.py`           | main window, menus, toolbar, threading, report builders                      |
+| `ifw/gui/__init__.py`       | application entry point (`run`)                                              |
+| `ifw.py`, `ifw/__main__.py` | launchers                                                                    |
+| `selftest.py`               | end-to-end test suite                                                        |
+| `make_demo.py`              | sample-image generator                                                       |
 
 ## Technical notes
 
 - **Canonical decode API.** `imaging.extract_stream(doc, carrier, bit,
-  msb_first, offset, max_bytes, all_bits, bit_width)` is the single source of
+msb_first, offset, max_bytes, all_bits, bit_width)` is the single source of
   truth for decoding. Every candidate the sweep reports can be reproduced by
   calling this function with the reported parameters. The bits of one sample are
   always read most significant first; `msb_first` selects how the resulting bit
@@ -326,3 +342,5 @@ python make_demo.py
   every offset and both byte orders, `numpy.packbits` does the byte packing in C,
   and a cheap prefilter (keyword byte search plus printable ratio) gates the
   heavier pattern matching.
+
+test
